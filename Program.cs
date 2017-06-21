@@ -18,7 +18,6 @@ namespace Ovning16._1
         [STAThread]
         static void Main()
         {
-            In();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

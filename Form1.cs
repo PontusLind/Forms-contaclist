@@ -21,7 +21,8 @@ namespace Ovning16._1
         public Form1()
         {
             InitializeComponent();
-            LoadContacsList(); //Nytt vet inte ifall funkar
+            myController.In();
+            LoadContacsList();
         }
 
         private void LoadContacsList()
@@ -86,7 +87,20 @@ namespace Ovning16._1
             {
                 if (texListBoxContacts.SelectedIndex >= 0)
                 {
+                    int index = indexForRef;
                     myController.AddContactInfo(texListBoxContacts.SelectedIndex, texPhoneType.Text, textPhoneNR.Text, texAddressType.Text, texAddressStreet.Text, texAddressCity.Text, texAddressZipCode.Text);
+                    texListBoxContacts.Items.Clear();
+                    texListBoxContacts.Items.Add("Telefon");
+                    for (int i = 0; i < myController.CountNumberOfPhone(index); i++)
+                    {
+                        texListBoxContacts.Items.Add($"Typ: {myController.Phone(index, i)[0]} telefon nummer: {myController.Phone(index, i)[1]}");
+                    }
+                    texListBoxContacts.Items.Add("Address");
+                    for (int i = 0; i < myController.CountNumberOfAddresses(index); i++)
+                    {
+                        texListBoxContacts.Items.Add($"Typ: {myController.Addresses(index, i)[0]} Gata: {myController.Addresses(index, i)[1]}");
+                    }
+
                 }
                 else
                 {

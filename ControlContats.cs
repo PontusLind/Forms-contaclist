@@ -16,6 +16,37 @@ namespace Ovning16._1
         public ControlContats()
         {
         }
+        public void In()
+        {
+
+            if (File.Exists("personRegister.txt"))
+            {
+                string[] fileInfo = File.ReadAllLines("personRegister.txt", Encoding.Default);
+                string[] temp = File.ReadAllLines("personRegister.txt");
+                for (int i = 0; i < temp.Length; i++)
+                {
+                    int index = 0;
+                    string[] temp2 = temp[i].Split(';');
+                    contacts.Add(new Person(temp2[index], temp2[index + 1], temp2[index + 2]));
+                    index += 3;
+
+                    while (index < temp2.Length)
+                    {
+                        if (temp2[index] == "#ADR")
+                        {
+                            contacts[i].myAddress.Add(new Address(temp2[index + 1], temp2[index + 2], temp2[index + 3], temp2[index + 4]));
+                            index += 5;
+                        }
+                        else if (temp2[index] == "#PHO")
+                        {
+                            contacts[i].myPhonNr.Add(new PhonNr(temp2[index + 1], temp2[index + 2]));
+                            index += 3;
+                        }
+                    }
+                }
+            }
+        } //Nytt vet inte ifall funkar
+
 
 
         public int CountNumberOfAddresses(int index)
@@ -150,7 +181,7 @@ namespace Ovning16._1
                 }
                 for (int j = 0; j < contacts[i].myPhonNr.Count; j++)
                 {
-                    temp[i] += ";" + "#LOY" + ";";
+                    temp[i] += ";" + "#PHO" + ";";
                     temp[i] += contacts[i].myPhonNr[j].Type + ";";
                     temp[i] += contacts[i].myPhonNr[j].NR;
                 }
