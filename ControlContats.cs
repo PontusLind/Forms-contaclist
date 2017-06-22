@@ -51,13 +51,22 @@ namespace Ovning16._1
 
         public int CountNumberOfAddresses(int index)
         {
-            int temp = contacts[index].myAddress.Count;
+            int temp = 0;
+            if (index >= 0)
+            {
+                temp = contacts[index].myAddress.Count;
+            }
             return temp;
         }
         public int CountNumberOfPhone(int index)
         {
-            int temp = contacts[index].myPhonNr.Count;
+            int temp = 0;
+            if (index >= 0)
+            {
+                temp = contacts[index].myPhonNr.Count;
+            }
             return temp;
+ 
         }
         public int CountNumberOfContacs()
         {
@@ -100,10 +109,23 @@ namespace Ovning16._1
 
         public void RemovContact(int index)
         {
-
             if (index > -1)
             {
                 contacts.RemoveAt(index);
+            }
+        }
+        public void RemovPhone(int index, int indexForList)
+        {
+            if (index > -1)
+            {
+                contacts[index].myPhonNr.RemoveAt(indexForList);
+            }
+        }
+        public void RemovAddress(int index, int indexForList)
+        {
+            if (index > -1)
+            {
+                contacts[index].myAddress.RemoveAt(indexForList);
             }
         }
 

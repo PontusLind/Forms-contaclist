@@ -128,6 +128,7 @@
             this.texListBoxContacts.Name = "texListBoxContacts";
             this.texListBoxContacts.Size = new System.Drawing.Size(252, 388);
             this.texListBoxContacts.TabIndex = 15;
+            this.texListBoxContacts.SelectedIndexChanged += new System.EventHandler(this.texListBoxContacts_SelectedIndexChanged);
             this.texListBoxContacts.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.texListBoxContacts_MouseDoubleClick);
             this.texListBoxContacts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.texListBoxContacts_MouseDown);
             // 

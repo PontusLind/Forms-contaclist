@@ -36,23 +36,57 @@ namespace Ovning16._1
 
         private void button4_Click(object sender, EventArgs e) //Skapa en kontakt
         {
-            string [] temp = myController.AddContact(texFirstName.Text, texLastName.Text, texSocialSecurityNumber.Text, texPhoneType.Text, textPhoneNR.Text, texAddressType.Text, texAddressStreet.Text, texAddressCity.Text, texAddressZipCode.Text);
-            texListBoxContacts.Items.Add($"Förnamn: {temp[0]}, Efternamn: {temp[1]}");
-            ClerTextBox();
+            if (tempBool == true)
+            {
+                string[] temp = myController.AddContact(texFirstName.Text, texLastName.Text, texSocialSecurityNumber.Text, texPhoneType.Text, textPhoneNR.Text, texAddressType.Text, texAddressStreet.Text, texAddressCity.Text, texAddressZipCode.Text);
+                texListBoxContacts.Items.Add($"Förnamn: {temp[0]}, Efternamn: {temp[1]}");
+                ClerTextBox();
+            }
         }
 
 
         private void button1_Click(object sender, EventArgs e) //TABORT
         {
-            int index = texListBoxContacts.SelectedIndex;
-            if (index > -1)
+            if (tempBool == true)
             {
-                texListBoxContacts.Items.RemoveAt(index); // Tar bort från texListBoxContacts
-                myController.RemovContact(index);         // Tar bort från contact listan
+
+                int index = texListBoxContacts.SelectedIndex;
+                if (index > -1)
+                {
+                    texListBoxContacts.Items.RemoveAt(index); // Tar bort från texListBoxContacts
+                    myController.RemovContact(index);         // Tar bort från contact listan
+                }
+                else
+                {
+                    MessageBox.Show("Vänligen markera ett namn");
+                }
             }
-            else
+            else if (tempBool == false)
             {
-                MessageBox.Show("Vänligen markera ett namn");
+                int marktIndex = texListBoxContacts.SelectedIndex;
+
+                if (marktIndex > -1)
+                {
+                    int index = indexForRef;
+
+
+                    if (marktIndex <= myController.CountNumberOfPhone(indexForRef) && marktIndex != 0)
+                    {
+                        myController.RemovPhone(index, marktIndex - 1 );
+                        texListBoxContacts.Items.RemoveAt(marktIndex);
+                    }
+                    else if (marktIndex - myController.CountNumberOfPhone(indexForRef) - 1 <= myController.CountNumberOfAddresses(indexForRef) && marktIndex - myController.CountNumberOfPhone(indexForRef) - 1 != 0 && marktIndex != 0)
+                    {
+                        myController.RemovAddress(index, marktIndex - 2 - myController.CountNumberOfPhone(index));
+                        texListBoxContacts.Items.RemoveAt(marktIndex);
+                    }
+                    else
+                        MessageBox.Show("Går inte att ta bort denna");
+                }
+                else
+                {
+                    MessageBox.Show("Vänligen markera ett namn");
+                }
             }
             ClerTextBox();
         }
@@ -87,10 +121,21 @@ namespace Ovning16._1
             {
                 if (texListBoxContacts.SelectedIndex >= 0)
                 {
-                    int index = indexForRef;
                     myController.AddContactInfo(texListBoxContacts.SelectedIndex, texPhoneType.Text, textPhoneNR.Text, texAddressType.Text, texAddressStreet.Text, texAddressCity.Text, texAddressZipCode.Text);
+                }
+                else
+                {
+                    MessageBox.Show("Vänligen markera ett namn");
+                }
+            }
+            else if (tempBool == false)                                                 
+            {
+                if (indexForRef >= 0)
+                {
+                    myController.AddContactInfo(indexForRef, texPhoneType.Text, textPhoneNR.Text, texAddressType.Text, texAddressStreet.Text, texAddressCity.Text, texAddressZipCode.Text);
                     texListBoxContacts.Items.Clear();
                     texListBoxContacts.Items.Add("Telefon");
+                    int index = indexForRef;
                     for (int i = 0; i < myController.CountNumberOfPhone(index); i++)
                     {
                         texListBoxContacts.Items.Add($"Typ: {myController.Phone(index, i)[0]} telefon nummer: {myController.Phone(index, i)[1]}");
@@ -100,18 +145,6 @@ namespace Ovning16._1
                     {
                         texListBoxContacts.Items.Add($"Typ: {myController.Addresses(index, i)[0]} Gata: {myController.Addresses(index, i)[1]}");
                     }
-
-                }
-                else
-                {
-                    MessageBox.Show("Vänligen markera ett namn");
-                }
-            }
-            else if (tempBool == false)                                                 //Uppdatera lista
-            {
-                if (indexForRef >= 0)
-                {
-                    myController.AddContactInfo(indexForRef, texPhoneType.Text, textPhoneNR.Text, texAddressType.Text, texAddressStreet.Text, texAddressCity.Text, texAddressZipCode.Text);
                 }       
             }
             ClerTextBox();
@@ -137,20 +170,20 @@ namespace Ovning16._1
                 texSocialSecurityNumber.Text = temp[2];
                 indexForLater = index;
             }         
-            else if (index > 0 && tempBool == false)
+            else if (index > - 1 && tempBool == false)
             {
                 string[] temp2 = myController.ReadListBasInfo(indexForLater);
                 texFirstName.Text = temp2[0];
                 texLastName.Text = temp2[1];
                 texSocialSecurityNumber.Text = temp2[2];
 
-                if (index - 1 <= myController.CountNumberOfPhone(indexForRef) )
+                if (index  <= myController.CountNumberOfPhone(indexForRef) && index != 0)
                 {
                     string[] temp = myController.ReadListBasInfoPhone(indexForRef, index - 1);
                     texPhoneType.Text = temp[0];
                     textPhoneNR.Text = temp[1];
                 }
-                else if ( index - myController.CountNumberOfPhone(indexForRef) - 2 <= myController.CountNumberOfAddresses(indexForRef))
+                else if ( index - myController.CountNumberOfPhone(indexForRef) - 1 <= myController.CountNumberOfAddresses(indexForRef) && index - myController.CountNumberOfPhone(indexForRef) - 1 !=  0 && index != 0)
                 {
                     string[] temp = myController.ReadListBasInfoAddress(indexForRef, index - myController.CountNumberOfPhone(indexForRef) - 2);
                     texAddressType.Text = temp[0];
@@ -209,19 +242,22 @@ namespace Ovning16._1
 
         private void texListBoxContacts_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            tempBool = false;
-            int index = texListBoxContacts.SelectedIndex;
-            indexForRef = texListBoxContacts.SelectedIndex;
-            texListBoxContacts.Items.Clear();
-            texListBoxContacts.Items.Add("Telefon");
-            for (int i = 0; i < myController.CountNumberOfPhone(index); i++)
+            if (tempBool == true)
             {
-                texListBoxContacts.Items.Add($"Typ: {myController.Phone(index, i)[0]} telefon nummer: {myController.Phone(index, i)[1]}");
-            }
-            texListBoxContacts.Items.Add("Address");
-            for (int i = 0; i < myController.CountNumberOfAddresses(index); i++)
-            {
-                texListBoxContacts.Items.Add($"Typ: {myController.Addresses(index, i)[0]} Gata: {myController.Addresses(index, i)[1]}");
+                tempBool = false;
+                int index = texListBoxContacts.SelectedIndex;
+                indexForRef = texListBoxContacts.SelectedIndex;
+                texListBoxContacts.Items.Clear();
+                texListBoxContacts.Items.Add("Telefon");
+                for (int i = 0; i < myController.CountNumberOfPhone(index); i++)
+                {
+                    texListBoxContacts.Items.Add($"Typ: {myController.Phone(index, i)[0]} telefon nummer: {myController.Phone(index, i)[1]}");
+                }
+                texListBoxContacts.Items.Add("Address");
+                for (int i = 0; i < myController.CountNumberOfAddresses(index); i++)
+                {
+                    texListBoxContacts.Items.Add($"Typ: {myController.Addresses(index, i)[0]} Gata: {myController.Addresses(index, i)[1]}");
+                }
             }
 
         }
@@ -235,6 +271,11 @@ namespace Ovning16._1
                 texListBoxContacts.Items.Add($"Förnamn: {myController.GetContacs(i)[0]}, Efternamn: {myController.GetContacs(i)[1]}");
             }
             ClerTextBox();
+        }
+
+        private void texListBoxContacts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
