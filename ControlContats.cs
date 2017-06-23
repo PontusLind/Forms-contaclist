@@ -45,7 +45,7 @@ namespace Ovning16._1
                     }
                 }
             }
-        } //Nytt vet inte ifall funkar
+        } //Initiera, läser från text fill. Om det finns någon
 
 
 
@@ -135,7 +135,28 @@ namespace Ovning16._1
             string[] returnList = new string[3];
             returnList[0] = contacts[index].FirstName;
             returnList[1] = contacts[index].LastName;
-            returnList[2] = contacts[index].SocialSecurityNumber;
+
+            // Sätter in ett bindesträck innan de 4 sista
+            string tempOriginal = contacts[index].SocialSecurityNumber;
+            int temoLength = tempOriginal.Length;
+            char[] tempCharArray = tempOriginal.ToCharArray();
+            string tempFinal = "";
+            int j = 0;
+
+            for (int i = 0; i < temoLength + 1; i++)
+            {
+                if (temoLength - 4 == i)
+                {
+                    tempFinal += "-";
+                }
+                else
+                {
+                    tempFinal += tempCharArray[j];
+                    j++;
+                }
+            }
+            returnList[2] = tempFinal;
+
             return returnList;
         }
 
@@ -160,7 +181,10 @@ namespace Ovning16._1
 
         public string [] AddContact (string texFirstName, string texLastName, string texSocialSecurityNumber, string texPhoneType, string textPhoneNR, string texAddressType, string texAddressStreet, string texAddressCity, string texAddressZipCode)
         {
-            contacts.Add(new Person(texFirstName, texLastName, texSocialSecurityNumber));
+            string toUperFirst = texFirstName.First().ToString().ToUpper() + texFirstName.Substring(1);
+            string toUperLAst = texLastName.First().ToString().ToUpper() + texLastName.Substring(1);
+
+            contacts.Add(new Person(toUperFirst, toUperLAst, texSocialSecurityNumber));
             contacts[contacts.Count - 1].myPhonNr.Add(new PhonNr(texPhoneType, textPhoneNR));
             contacts[contacts.Count - 1].myAddress.Add(new Address(texAddressType, texAddressStreet, texAddressCity, texAddressZipCode));
             string[] temp = new string[2];
@@ -210,5 +234,31 @@ namespace Ovning16._1
             }
             File.WriteAllLines(path, temp);
         }
+
+        public bool CheckIfSocialSecurityNumberIsAvailable (string SSN)
+        {
+
+            bool answer = false;
+            for (int i = 0; i < contacts.Count; i++)
+            {
+                if (contacts[i].SocialSecurityNumber == SSN)
+                {
+                    answer = true;
+                }
+
+            }
+            return answer;
+        } //Ej prövad
+        public string CheckIfSocialSecurityNumberType(string SSN)
+        {
+            string[] stringReturnSplit = SSN.Split('-', ' ');
+            string stringReturn = "";
+            for (int i = 0; i < stringReturnSplit.Length; i++)
+            {
+                stringReturn += stringReturnSplit[i];
+            }
+            return stringReturn;
+        } //Ej prövad
+
     }
 }

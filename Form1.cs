@@ -36,11 +36,36 @@ namespace Ovning16._1
 
         private void button4_Click(object sender, EventArgs e) //Skapa en kontakt
         {
-            if (tempBool == true)
+            if (texFirstName.Text.Length > 0 && texLastName.Text.Length > 0 && texSocialSecurityNumber.Text.Length > 9 && texPhoneType.Text.Length > 0 && textPhoneNR.Text.Length > 0 && texAddressType.Text.Length > 0 && texAddressStreet.Text.Length > 0 && texAddressCity.Text.Length > 0 && texAddressZipCode.Text.Length > 0)
             {
-                string[] temp = myController.AddContact(texFirstName.Text, texLastName.Text, texSocialSecurityNumber.Text, texPhoneType.Text, textPhoneNR.Text, texAddressType.Text, texAddressStreet.Text, texAddressCity.Text, texAddressZipCode.Text);
-                texListBoxContacts.Items.Add($"Förnamn: {temp[0]}, Efternamn: {temp[1]}");
-                ClerTextBox();
+                string SSN = myController.CheckIfSocialSecurityNumberType(texSocialSecurityNumber.Text);
+                bool alreadyExists = myController.CheckIfSocialSecurityNumberIsAvailable(SSN);
+                if (tempBool == true && alreadyExists == false)
+                {
+                    string[] temp = myController.AddContact(texFirstName.Text, texLastName.Text, SSN, texPhoneType.Text, textPhoneNR.Text, texAddressType.Text, texAddressStreet.Text, texAddressCity.Text, texAddressZipCode.Text);
+                    texListBoxContacts.Items.Add($"Förnamn: {temp[0]}, Efternamn: {temp[1]}");
+                    ClerTextBox();
+                }
+                else if (alreadyExists == true)
+                {
+                    MessageBox.Show("Personnumret finns redan");
+                }
+                else if (tempBool == false)
+                {
+                    MessageBox.Show("Det går bara att skapa en kontakt i förra lägget \nTryck på tillbaka och försök igen");
+                }
+                else if (texSocialSecurityNumber.Text.Length <= 9)
+                {
+                    MessageBox.Show("Personnumret måste vara minns 10 siffror långt");
+                }
+                else
+                {
+                    MessageBox.Show("Något gick fel och kontakten skapades inte");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vänligen fyll i alla fält");
             }
         }
 
@@ -115,8 +140,9 @@ namespace Ovning16._1
             ClerTextBox();
         }
 
-        private void butAddContact_Click(object sender, EventArgs e)//Lägg till
+        private void butAddContact_Click(object sender, EventArgs e)//Lägg till information
         {
+
             if (tempBool == true)
             {
                 if (texListBoxContacts.SelectedIndex >= 0)
@@ -172,7 +198,7 @@ namespace Ovning16._1
             }         
             else if (index > - 1 && tempBool == false)
             {
-                string[] temp2 = myController.ReadListBasInfo(indexForLater);
+                string[] temp2 = myController.ReadListBasInfo(indexForRef);
                 texFirstName.Text = temp2[0];
                 texLastName.Text = temp2[1];
                 texSocialSecurityNumber.Text = temp2[2];
@@ -193,7 +219,6 @@ namespace Ovning16._1
                 }
             }
         }
-
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
