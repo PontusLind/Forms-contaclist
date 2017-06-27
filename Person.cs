@@ -22,8 +22,8 @@ namespace Ovning16._1
             SocialSecurityNumber = socialSecurityNumber;
             this.myPhonNr = new List<PhonNr>();
             this.myAddress = new List<Address>();
-
         }
+
         public string FirstName
         {
             get { return firsName; }
@@ -49,10 +49,5 @@ namespace Ovning16._1
             {
             }
         }
-
-
-    
-
-
     }
 }

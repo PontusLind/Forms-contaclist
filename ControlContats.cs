@@ -6,8 +6,6 @@ using System.Text;
 
 namespace Ovning16._1
 {
-
-
     public class ControlContats
     {
         List<Person> contacts = new List<Person>();
@@ -46,7 +44,6 @@ namespace Ovning16._1
                 }
             }
         } //Initiera, läser från text fill. Om det finns någon
-
 
 
         public int CountNumberOfAddresses(int index)
@@ -104,7 +101,6 @@ namespace Ovning16._1
 
             return temp;
         }
-
 
 
         public void RemovContact(int index)
@@ -248,7 +244,8 @@ namespace Ovning16._1
 
             }
             return answer;
-        } //Ej prövad
+        } 
+
         public string CheckIfSocialSecurityNumberType(string SSN)
         {
             string[] stringReturnSplit = SSN.Split('-', ' ');
@@ -258,7 +255,6 @@ namespace Ovning16._1
                 stringReturn += stringReturnSplit[i];
             }
             return stringReturn;
-        } //Ej prövad
-
+        } 
     }
 }
